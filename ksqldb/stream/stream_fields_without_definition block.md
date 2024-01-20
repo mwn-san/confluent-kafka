@@ -1,0 +1,6 @@
+CREATE STREAM IF NOT EXISTS stream_name
+WITH (
+  KAFKA_TOPIC = 'source_topic',
+  VALUE_FORMAT='AVRO',
+  PARTITIONS=10
+);
