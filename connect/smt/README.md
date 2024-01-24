@@ -10,7 +10,7 @@ Property:
 Example on how to add to your connector:
 ```
 "transforms": "appendSchema",
-"transforms.appendSchema.type": "com.github.yousufdev.kafka.connect.smt.AppendSchema$Value",
+"transforms.appendSchema.type": "com.github.mwn.kafka.connect.smt.AppendSchema$Value",
 "transforms.appendSchema.schema" : "{'schema':{'type':'struct','fields':[{'type':'int64','optional':false,'field':'id'},{'type':'string','optional':true,'field':'name'},{'type':'string','optional':true,'field':'email'},{'type':'string','optional':true,'field':'department'}],'optional':false,'name':'test'}}"
 ```
 
