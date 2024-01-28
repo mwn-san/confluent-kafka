@@ -4,7 +4,9 @@ SELECT
     ROWPARTITION AS PARTITION,
     ROWOFFSET AS OFFSET,
     message->data->field_name_A AS field_name_A,
-    message->headers->field_name_B AS field_name_B
+    message->data->field_name_B AS field_name_B,
+    message->data->field_name_C AS field_name_C,
+    message->headers->field_name_D AS field_name_D
 FROM
     stream_name
 WHERE
