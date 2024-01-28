@@ -1,0 +1,16 @@
+CREATE STREAM stream_name (
+  message STRUCT<
+        data STRUCT<
+            field_name VARCHAR,
+            field_name BIGINT,
+            field_name INT
+		>,
+		    headers STRUCT<
+		        field_name VARCHAR
+		>
+	>
+) WITH (
+  kafka_topic='topic_name',
+  value_format='AVRO',
+  partitions=10
+);
