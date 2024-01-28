@@ -1,0 +1,12 @@
+```
+SELECT
+    message->data->field_name_A AS field_name_A,
+    message->data->field_name_B AS field_name_B,
+    message->data->field_name_C AS field_name_C,
+    message->headers->field_name_D AS field_name_D
+FROM
+    stream_name
+WHERE
+    message->data->field_name_A = 21434107793451
+EMIT CHANGES;
+```
