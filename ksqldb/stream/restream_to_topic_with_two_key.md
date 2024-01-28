@@ -1,3 +1,7 @@
+Stream nested data here:
+
+https://github.com/mwn-san/kafka/blob/mwn/ksqldb/stream/nested_structured_data.md
+
 
 ```
 CREATE STREAM stream_name AS
