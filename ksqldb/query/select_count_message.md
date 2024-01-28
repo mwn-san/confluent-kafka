@@ -1,0 +1,5 @@
+```
+SELECT COUNT(*) AS TOTAL_MESSAGES
+FROM stream_name
+EMIT CHANGES;
+```
