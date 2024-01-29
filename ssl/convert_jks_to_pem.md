@@ -1,8 +1,6 @@
-```
-###################################################
-#             CONVERT JKS TO PEM                  #
-###################################################
+# CONVERT JKS TO PEM
 
+```
 # 1. Converting a JKS to PKCS12 keystore
 #---------------------------------------#
 keytool -importkeystore -srckeystore domain.com.keystore.jks -destkeystore domain.com.pfx -deststoretype pkcs12
@@ -28,6 +26,6 @@ keytool -exportcert -alias domain.com -file domain.com.pem -keystore domain.com.
            -nocerts: No certificates will be exported at all, only the private key entry
 \*
 openssl pkcs12 -in domain.com.pfx -nodes -nocerts -out domain.com.private.key.pem
-
-Certificate check: https://www.sslshopper.com/certificate-key-matcher.html
 ```
+
+Certificate checker: https://www.sslshopper.com/certificate-key-matcher.html
