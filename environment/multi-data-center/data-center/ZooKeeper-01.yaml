@@ -13,8 +13,8 @@ services:
   ZK731:
     image: confluentinc/cp-zookeeper:7.3.1
     container_name: ZK731
-    network_mode: "example"
-    extra_host:
+    network_mode: "host"
+    extra_hosts:
       - "example.co.id:127.0.0.1"
     restart: unless-stopped
     logging:
