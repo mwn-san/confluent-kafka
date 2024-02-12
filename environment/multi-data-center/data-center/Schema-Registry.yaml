@@ -1,0 +1,60 @@
+
+#  {-------------------------------------------------------------------}
+#  Copyright © 2024 MOHAMMAD WILDAN NURYULDA - MWN - nuryulda@gmail.com
+#  Created Date [Sunday, 21 Januari 2024 - 02:30:00]
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Licensed under the Apache License, Version 2.0 (the "License") at;
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  http://www.apache.org/licenses/LICENSE-2.0
+#  {-------------------------------------------------------------------}
+
+version: '2'
+services:
+  SR731:
+    image: confluentinc/cp-schema-registry:7.3.1
+    container_name: SR731
+    network_mode: "example"
+    extra_examples:
+      - "example.co.id:127.0.0.1"
+    volumes:
+      - /etc/kafka/secrets:/etc/kafka/secrets
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+    environment:
+      # ======================= SCHEMA REGISTRY =======================
+      # -> general config schema-registry
+      SCHEMA_REGISTRY_example_NAME: example.co.id
+      SCHEMA_REGISTRY_LISTENERS: http://example.co.id:8081,https://example.co.id:8082
+      SCHEMA_REGISTRY_DEBUG: 'true'
+      SCHEMA_REGISTRY_INTER_INSTANCE_PROTOCOL: https
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: example.co.id:9093,example.co.id:9093,example.co.id:9093
+
+      # -> schema compability [ backward, backward_transitive, forward, forward_transitive, full, full_transitife, none]
+      SCHEMA_REGISTRY_SCHEMA_COMPATIBILITY_LEVEL: backward_transitive
+
+      # -> log
+      SCHEMA_REGISTRY_LOG4J_ROOT_LOGLEVEL: INFO
+
+      # -> ssl schema-registry connect to broker
+      SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: SSL
+      SCHEMA_REGISTRY_KAFKASTORE_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/example.co.id.truststore.jks
+      SCHEMA_REGISTRY_KAFKASTORE_SSL_TRUSTSTORE_PASSWORD: confluent
+      SCHEMA_REGISTRY_KAFKASTORE_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/example.co.id.keystore.jks
+      SCHEMA_REGISTRY_KAFKASTORE_SSL_KEYSTORE_PASSWORD: confluent
+      SCHEMA_REGISTRY_KAFKASTORE_SSL_KEY_PASSWORD: confluent
+
+      # -> ssl schema-registry https end-point
+      SCHEMA_REGISTRY_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/example.co.id.keystore.jks
+      SCHEMA_REGISTRY_SSL_KEYSTORE_PASSWORD: confluent
+      SCHEMA_REGISTRY_SSL_KEY_PASSWORD: confluent
+      SCHEMA_REGISTRY_SSL_TRUSTSTORE_PASSWORD: confluent
+      SCHEMA_REGISTRY_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/example.co.id.truststore.jks
+
+      # -> timezone
+      TZ: Asia/Jakarta
+
+      # -> other schema registry stuff
+      SCHEMA_REGISTRY_OPTS: -Xmx2G
