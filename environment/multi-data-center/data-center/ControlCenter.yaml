@@ -1,0 +1,121 @@
+
+#  {-------------------------------------------------------------------}
+#  Copyright © 2024 MOHAMMAD WILDAN NURYULDA - MWN - nuryulda@gmail.com
+#  Created Date [Sunday, 21 Januari 2024 - 02:30:00]
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Licensed under the Apache License, Version 2.0 (the "License") at;
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  http://www.apache.org/licenses/LICENSE-2.0
+#  {-------------------------------------------------------------------}
+
+version: '2'
+services:
+  C3731:
+    image: confluentinc/cp-enterprise-control-center:7.3.1
+    container_name: C3731
+    network_mode: "host"
+    extra_hosts:
+      - "example.co.id:127.0.0.1"
+    volumes:
+      - /etc/kafka/jaas:/etc/kafka/secrets/jaas/
+      - /etc/kafka/secrets:/etc/kafka/secrets
+    #restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+    environment:
+      # ======================= CONTROL CENTER ======================
+      # -> general config control center
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: example.co.id:9093,example.co.id:9093,example.co.id:9093
+
+      # -> component cluster data-center
+      CONTROL_CENTER_SCHEMA_REGISTRY_DATA-CENTER_URL: https://example.co.id:8082
+      CONTROL_CENTER_CONNECT_REPLICATOR-DATA-CENTER_CLUSTER: http://example.co.id:8086,http://example.co.id:8086
+      CONTROL_CENTER_CONNECT_DATA-CENTER_CLUSTER: http://example.co.id:8083,http://example.co.id:8083
+      CONTROL_CENTER_KSQL_DATA-CENTER_URL: https://example.co.id:8089,https://example.co.id:8089
+      CONTROL_CENTER_KSQL_DATA-CENTER_ADVERTISED_URL: https://example.co.id:8089,https://example.co.id:8089
+
+      # -> cluster data-center
+      CONTROL_CENTER_KAFKA_DATA-CENTER_BOOTSTRAP_SERVERS: example.co.id:9093,example.co.id:9093,example.co.id:9093
+
+      # -> ssl control center cluster data-center
+      CONTROL_CENTER_KAFKA_DATA-CENTER_SECURITY_PROTOCOL: SSL
+      CONTROL_CENTER_KAFKA_DATA-CENTER_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/example.co.id.truststore.jks
+      CONTROL_CENTER_KAFKA_DATA-CENTER_SSL_TRUSTSTORE_PASSWORD: confluent
+      CONTROL_CENTER_KAFKA_DATA-CENTER_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/example.co.id.keystore.jks
+      CONTROL_CENTER_KAFKA_DATA-CENTER_SSL_KEYSTORE_PASSWORD: confluent
+      CONTROL_CENTER_KAFKA_DATA-CENTER_SSL_KEY_PASSWORD: confluent
+
+      # -> component cluster disaster-recovery-center
+      CONTROL_CENTER_SCHEMA_REGISTRY_DISASTER-RECOVERY-CENTER_URL: https://example.co.id:8082
+      CONTROL_CENTER_CONNECT_REPLICATOR-DISASTER-RECOVERY-CENTER_CLUSTER: http://example.co.id:8086,http://example.co.id:8086
+      CONTROL_CENTER_CONNECT_DISASTER-RECOVERY-CENTER_CLUSTER: http://example.co.id:8083,http://example.co.id:8083
+      CONTROL_CENTER_KSQL_DISASTER-RECOVERY-CENTER_URL: https://example.co.id:8089,https://example.co.id:8089
+      CONTROL_CENTER_KSQL_DISASTER-RECOVERY-CENTER_ADVERTISED_URL: https://example.co.id:8089,https://example.co.id:8089
+
+      # -> cluster disaster-recovery-center
+      CONTROL_CENTER_KAFKA_DISASTER-RECOVERY-CENTER_BOOTSTRAP_SERVERS: example.co.id:9093,example.co.id:9093,example.co.id:9093
+
+      # -> ssl control center cluster disaster-recovery-center
+      CONTROL_CENTER_KAFKA_DISASTER-RECOVERY-CENTER_SECURITY_PROTOCOL: SSL
+      CONTROL_CENTER_KAFKA_DISASTER-RECOVERY-CENTER_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/example.co.id.truststore.jks
+      CONTROL_CENTER_KAFKA_DISASTER-RECOVERY-CENTER_SSL_TRUSTSTORE_PASSWORD: confluent
+      CONTROL_CENTER_KAFKA_DISASTER-RECOVERY-CENTER_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/example.co.id.keystore.jks
+      CONTROL_CENTER_KAFKA_DISASTER-RECOVERY-CENTER_SSL_KEYSTORE_PASSWORD: confluent
+      CONTROL_CENTER_KAFKA_DISASTER-RECOVERY-CENTER_SSL_KEY_PASSWORD: confluent
+
+      # -> partition and imperonation control center
+      CONTROL_CENTER_REPLICATION_FACTOR: 3
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 6
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 6
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 3
+
+      # -> listners http and https ui control center
+      CONTROL_CENTER_REST_LISTENERS: http://0.0.0.0:9021,https://0.0.0.0:9022
+
+      # -> default port
+      PORT: 9021
+
+      # -> log
+      CONTROL_CENTER_CONTROL_CENTER_LOGGING_PROCESSING_TOPIC_REPLICATION_FACTOR: 3
+      CONTROL_CENTER_CONTROL_CENTER_LOGGING_PROCESSING_TOPIC_AUTO_CREATE: 'true'
+      CONTROL_CENTER_CONTROL_CENTER_LOGGING_PROCESSING_STREAM_AUTO_CREATE: 'true'
+
+      # -> disable auto-update control center
+      CONTROL_CENTER_UI_AUTOUPDATE_ENABLE: 'false'
+
+      # -> increase troughput
+      CONTROL_CENTER_STREAMS_CACHE_MAX_BYTES_BUFFERING: 100000000
+      CONTROL_CENTER_STREAMS_CONSUMER_REQUEST_TIMEOUT_MS: "960032"
+      CONTROL_CENTER_STREAMS_NUM_STREAM_THREADS: 1
+
+      # -> ui http basic authetication
+      CONTROL_CENTER_REST_AUTHENTICATION_METHOD: BASIC
+      CONTROL_CENTER_REST_AUTHENTICATION_REALM: c3
+      CONTROL_CENTER_REST_AUTHENTICATION_ROLES: Administrators,Restricted
+      CONTROL_CENTER_AUTH_RESTRICTED_ROLES: Restricted
+      CONTROL_CENTER_AUTH_SESSION_EXPIRATION_MS: 600000
+      CONTROL_CENTER_OPTS: -Djava.security.auth.login.config=/etc/kafka/secrets/jaas/c3_authentication_jaas.conf
+
+      # -> ssl ui rest control center
+      CONTROL_CENTER_REST_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/example.co.id.truststore.jks
+      CONTROL_CENTER_REST_SSL_TRUSTSTORE_PASSWORD: confluent
+      CONTROL_CENTER_REST_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/example.co.id.keystore.jks
+      CONTROL_CENTER_REST_SSL_KEYSTORE_PASSWORD: confluent
+      CONTROL_CENTER_REST_SSL_KEY_PASSWORD: confluent
+
+      # ->  ssl streams control center
+      CONTROL_CENTER_STREAMS_SECURITY_PROTOCOL: SSL
+      CONTROL_CENTER_STREAMS_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/example.co.id.truststore.jks
+      CONTROL_CENTER_STREAMS_SSL_TRUSTSTORE_PASSWORD: confluent
+      CONTROL_CENTER_STREAMS_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/example.co.id.keystore.jks
+      CONTROL_CENTER_STREAMS_SSL_KEYSTORE_PASSWORD: confluent
+      CONTROL_CENTER_STREAMS_SSL_KEY_PASSWORD: confluent
+
+      # -> other control center stuff
+      CONTROL_CENTER_HEAP_OPTS: -Xms8g
+
+      # -> confluent lisence
+      CONTROL_CENTER_CONFLUENT_LICENSE:
