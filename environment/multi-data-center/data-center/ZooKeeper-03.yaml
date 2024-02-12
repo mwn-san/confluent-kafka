@@ -71,7 +71,7 @@ services:
       TZ: Asia/Jakarta
 
       # other zookeeper stuff
-      KAFKA_HEAP_OPTS: -Xms1G
+      KAFKA_HEAP_OPTS: -Xms2G
       KAFKA_OPTS: -Dzookeeper.4lw.commands.whitelist=*
                   -Djava.security.auth.login.config=/etc/kafka/jaas/zookeeper_server_jaas.conf
 
