@@ -1,0 +1,77 @@
+
+#  {-------------------------------------------------------------------}
+#  Copyright © 2024 MOHAMMAD WILDAN NURYULDA - MWN - nuryulda@gmail.com
+#  Created Date [Sunday, 21 Januari 2024 - 02:30:00]
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  Licensed under the Apache License, Version 2.0 (the "License") at;
+#  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#  http://www.apache.org/licenses/LICENSE-2.0
+#  {-------------------------------------------------------------------}
+
+version: '2'
+services:
+  ZK731:
+    image: confluentinc/cp-zookeeper:7.3.1
+    container_name: ZK731
+    network_mode: "host"
+    extra_hosts:
+      - "example.co.id:127.0.0.1"
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "5"
+    volumes:
+      - /etc/kafka/data/zk-data:/var/lib/zookeeper/data
+      - /etc/kafka/data/zk-txn-logs:/var/lib/zookeeper/log
+      - /etc/kafka/jaas:/etc/kafka/jaas
+      - /etc/kafka/secrets:/etc/kafka/secrets
+    environment:
+      # =================================  ZOOKEEPER  =================================
+      # -> general config zookeeper
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_SECURE_CLIENT_PORT: 2182
+      ZOOKEEPER_TICK_TIME: 6000
+      ZOOKEEPER_INIT_LIMIT: 15
+      ZOOKEEPER_SYNC_LIMIT: 10
+      ZOOKEEPER_MAX_CLIENT_CNXNS: 0
+
+      # -> log
+      ZOOKEEPER_LOG4J_ROOT_LOGLEVEL: "INFO"
+
+      # -> zookeeper servers
+      ZOOKEEPER_SERVERS: example.co.id:2888:3888;example.co.id:2888:3888;example.co.id:2888:3888
+
+      # -> ssl zookeeper
+      ZOOKEEPER_SERVER_CNXN_FACTORY: org.apache.zookeeper.server.NettyServerCnxnFactory
+      ZOOKEEPER_SSL_KEYSTORE_LOCATION: /etc/kafka/secrets/example.co.id.keystore.jks
+      ZOOKEEPER_SSL_KEYSTORE_PASSWORD: confluent
+      ZOOKEEPER_SSL_KEYSTORE_TYPE: PKCS12
+      ZOOKEEPER_SSL_TRUSTSTORE_LOCATION: /etc/kafka/secrets/example.co.id.truststore.jks
+      ZOOKEEPER_SSL_TRUSTSTORE_PASSWORD: confluent
+      ZOOKEEPER_SSL_TRUSTSTORE_TYPE: JKS
+      ZOOKEEPER_SSL_CLIENT_AUTH: none
+
+      # -> ssl zookeeper quorum
+      ZOOKEEPER_SSL_QUORUM_KEYSTORE_LOCATION: /etc/kafka/secrets/example.co.id.keystore.jks
+      ZOOKEEPER_SSL_QUORUM_KEYSTORE_PASSWORD: confluent
+      ZOOKEEPER_SSL_QUORUM_TRUSTSTORE_LOCATION: /etc/kafka/secrets/example.co.id.truststore.jks
+      ZOOKEEPER_SSL_QUORUM_TRUSTSTORE_PASSWORD: confluent
+
+      # -> sasl zookeeper
+      ZOOKEEPER_AUTH_PROVIDER_SASL: org.apache.zookeeper.server.auth.SASLAuthenticationProvider
+      ZOOKEEPER_AUTH_PROVIDER_X509: org.apache.zookeeper.server.auth.X509AuthenticationProvider
+
+      # -> jmx port
+      KAFKA_JMX_PORT: 9581
+
+      # -> timezone
+      TZ: Asia/Jakarta
+
+      # other zookeeper stuff
+      KAFKA_HEAP_OPTS: -Xms1G
+      KAFKA_OPTS: -Dzookeeper.4lw.commands.whitelist=*
+                  -Djava.security.auth.login.config=/etc/kafka/jaas/zookeeper_server_jaas.conf
+
