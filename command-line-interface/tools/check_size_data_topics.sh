@@ -32,6 +32,7 @@ find "$KAFKA_DATA_DIR" -mindepth 1 -maxdepth 1 -type d | while read -r partition
 
   if $all_empty; then
     echo "Empty topic detected: $topic_name"
+    
   fi
 done
 
